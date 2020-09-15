@@ -13,18 +13,15 @@ page:
             subPath: pages/data_edit.php
             yformTable: rex_spellchecker_dictionary
             yformClass: myaddon-yform
-            perm: admin[]
         issues:
             title: 'translate:spellchecker_issues'
             icon: rex-icon fa-table
             subPath: pages/data_edit.php
             yformTable: rex_spellchecker_issue
             yformClass: myaddon-yform
-            perm: admin[]
         scans:
             title: 'translate:spellchecker_scans'
             icon: rex-icon fa-table
-            perm: admin[]
         settings:
             title: 'translate:spellchecker_settings'
             perm: admin[]
