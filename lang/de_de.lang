@@ -1,0 +1,58 @@
+spellchecker = Spellchecker
+spellchecker_title = Spellchecker
+spellchecker_dictionary = Wörterbuch
+word = Wort
+spellchecker_language_notice = z.B. de,en ..
+spellchecker_languageword_unique_error = Sprache und Wort dürfen in dieser Kombination nur einmal vorhanden sein
+spellchecker_language_not_empty_error = Sprache darf nicht leer sein
+spellchecker_word_not_empty_error = Wort darf nicht leer sein
+spellchecker_scan = Scan
+spellchecker_scans = Scans
+
+spellchecker_word_already_exists_in_dic = Das Wort in dieser Sprache existiert bereits in der Bibliothek
+spellchecker_dict = im Wörterbuch
+spellchecker_issue = Issue
+spellchecker_issues = Issues
+spellchecker_word = Wort
+spellchecker_scankey = Scan-Kennung
+spellchecker_item_id = Item
+spellchecker_createdate = Erstellungsdatum
+
+spellchecker_dashboard = Dashboard
+spellchecker_count = Anzahl
+spellchecker_count_about = Anzahl (ca.)
+spellchecker_title_words = Auswertung Top {0} unbekannter Wörter
+functions = Funktionen
+spellchecker_language = Sprache
+
+spellchecker_title_item_by_word = Auswertung {0} Items von `{1}`
+spellchecker_field_title = Titel
+spellchecker_field_id = Id
+spellchecker_functions = Funktionen
+spellchecker_edit_item = bearbeiten
+spellchecker_show_items = Items anzeigen
+spellchecker_item = Item
+spellchecker_add_word = Wort aufnehmen
+spellchecker_settings = Settings
+spellchecker_settings_saved = Setting wurde gespeichert
+spellchecker_bin_path = Bin Path zu aspell
+
+spellchecker_description = Beschreibung
+spellchecker_table = Tabelle
+spellchecker_scan_interval = Intervall
+spellchecker_scan_duration = Dauer
+spellchecker_getCurrentScanPosition = Aktuelle Scan-Position
+spellchecker_scanDone = abgeschlossen
+spellchecker_title_scans = Scan-Übersicht (angemeldete Überprüfungen)
+
+spellchecker_fieldsinfo = Feldinfo
+spellchecker_scan_query = Scan-Query
+spellchecker_scan_query_count = Scan-Query-Count
+spellchecker_scan_link = Edit-Link
+
+spellchecker_noscansfound = Keine Scans gefunden
+
+spellchecker_ignore = ignorieren
+or = oder
+spellchecker_issue_ignored = Issue wird nun ignoriert
+spellchecker_issue_not_found = Issue wurde nicht gefunden

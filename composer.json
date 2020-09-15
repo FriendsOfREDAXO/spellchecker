@@ -1,0 +1,6 @@
+{
+    "require": {
+        "mekras/php-speller": "^2.1",
+        "symfony/cache": "^5.1"
+    }
+}

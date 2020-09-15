@@ -1,0 +1,38 @@
+package: spellchecker
+version: '0.1'
+
+page:
+    title: 'translate:spellchecker'
+    perm: spellchecker[]
+    subpages:
+        dashboard:
+            title: 'translate:dashboard'
+        dictionary:
+            title: 'translate:spellchecker_dictionary'
+            icon: rex-icon fa-table
+            subPath: pages/data_edit.php
+            yformTable: rex_spellchecker_dictionary
+            yformClass: myaddon-yform
+            perm: admin[]
+        issues:
+            title: 'translate:spellchecker_issues'
+            icon: rex-icon fa-table
+            subPath: pages/data_edit.php
+            yformTable: rex_spellchecker_issue
+            yformClass: myaddon-yform
+            perm: admin[]
+        scans:
+            title: 'translate:spellchecker_scans'
+            icon: rex-icon fa-table
+            perm: admin[]
+        settings:
+            title: 'translate:spellchecker_settings'
+            perm: admin[]
+        description:
+            title: 'translate:spellchecker_description'
+            icon: rex-icon fa-book
+            itemclass: pull-right
+
+requires:
+    packages:
+        yform: '^3'
