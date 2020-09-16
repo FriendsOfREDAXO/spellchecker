@@ -50,7 +50,12 @@ class rex_spellchecker_scan
                     foreach ($scan->getScanFields() as $field) {
                         $content[] = $item[$field];
                     }
-                    $source = new StringSource(strip_tags(implode(' ', $content)), 'utf-8');
+
+                    $content = implode(' ', $content);
+                    $content = strip_tags($content);
+                    $content = str_replace('<', ' <', $content);
+
+                    $source = new StringSource($content, 'utf-8');
 
                     $de = new Dictionary(rex_spellchecker::getDictionaryPath($scan->language));
 
