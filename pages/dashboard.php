@@ -51,17 +51,22 @@ $content .= '<thead>
             </thead>';
 $content .= '<tbody>';
 foreach ($words as $word) {
-    $wordObject = rex_spellchecker_dictionary::get($word['word_id']);
-
-    if ($word['word_id'] == $word_id) {
-        $content .= '<tr class="rex">';
-    } else {
-        $content .= '<tr>';
+    try {
+        $wordObject = rex_spellchecker_dictionary::get((int) $word['word_id']);
+        if ($word['word_id'] == $word_id) {
+            $content .= '<tr class="rex">';
+        } else {
+            $content .= '<tr>';
+        }
+        $content .= '<td><b>'.rex_escape($wordObject->getWord()).'</b><br /><a href="'.rex_url::currentBackendPage(['func' => 'add_word', 'word_id' => $wordObject->getId()]).'">'.rex_i18n::msg('spellchecker_add_word').'</a></td>';
+        $content .= '<td>'.$wordObject->getLanguage().'</td>';
+        $content .= '<td>'.$word['counts'].'<br /><a href="'.rex_url::currentBackendPage(['func' => 'open', 'word_id' => $wordObject->getId()]).'">'.rex_i18n::msg('spellchecker_show_items').'</a></td>';
+        $content .= '</tr>';
+    } catch (Exception $e) {
+        $content .= '<tr><td colspan="3">Word with ID '.$word['word_id'].' not found</td></tr>';
+    } catch (Error $e) {
+        $content .= '<tr><td colspan="3">Word with ID '.$word['word_id'].' not found</td></tr>';
     }
-    $content .= '<td><b>'.rex_escape($wordObject->getWord()).'</b><br /><a href="'.rex_url::currentBackendPage(['func' => 'add_word', 'word_id' => $wordObject->getId()]).'">'.rex_i18n::msg('spellchecker_add_word').'</a></td>';
-    $content .= '<td>'.$wordObject->getLanguage().'</td>';
-    $content .= '<td>'.$word['counts'].'<br /><a href="'.rex_url::currentBackendPage(['func' => 'open', 'word_id' => $wordObject->getId()]).'">'.rex_i18n::msg('spellchecker_show_items').'</a></td>';
-    $content .= '</tr>';
 }
 $content .= '</tbody>';
 $content .= '</table>';
