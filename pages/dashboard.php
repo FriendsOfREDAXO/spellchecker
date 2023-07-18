@@ -32,7 +32,7 @@ switch ($func) {
                 ->save();
             rex_spellchecker_issue::deleteIssuesByWordId($word_id);
             rex_spellchecker::compileDictionaries();
-            echo rex_view::success('spellchecker_word_added');
+            echo rex_view::success($this->i18n('spellchecker_word_added', $word->getWord()));
         } catch (Exception $e) {
             echo $e->getMessage();
         }
