@@ -48,6 +48,7 @@ class rex_spellchecker_issue extends \rex_yform_manager_dataset
     public static function getWordsCount(int $limit = 20)
     {
         $cache = new FilesystemAdapter();
+        $cache->delete('spellchecker_getWordsCount');
 
         return $cache->get('spellchecker_getWordsCount', function (ItemInterface $item) use ($limit) {
             $item->expiresAfter(3600);
