@@ -58,7 +58,7 @@ trait FilesystemCommonTrait
         $ok = true;
 
         foreach ($this->scanHashDir($this->directory) as $file) {
-            if ('' !== $namespace && 0 !== strpos($this->getFileKey($file), $namespace)) {
+            if ('' !== $namespace && !str_starts_with($this->getFileKey($file), $namespace)) {
                 continue;
             }
 
@@ -83,7 +83,7 @@ trait FilesystemCommonTrait
         return $ok;
     }
 
-    protected function doUnlink($file)
+    protected function doUnlink(string $file)
     {
         return @unlink($file);
     }
@@ -93,12 +93,23 @@ trait FilesystemCommonTrait
         set_error_handler(__CLASS__.'::throwError');
         try {
             if (null === $this->tmp) {
-                $this->tmp = $this->directory.uniqid('', true);
+                $this->tmp = $this->directory.bin2hex(random_bytes(6));
             }
-            file_put_contents($this->tmp, $data);
+            try {
+                $h = fopen($this->tmp, 'x');
+            } catch (\ErrorException $e) {
+                if (!str_contains($e->getMessage(), 'File exists')) {
+                    throw $e;
+                }
+
+                $this->tmp = $this->directory.bin2hex(random_bytes(6));
+                $h = fopen($this->tmp, 'x');
+            }
+            fwrite($h, $data);
+            fclose($h);
 
             if (null !== $expiresAt) {
-                touch($this->tmp, $expiresAt);
+                touch($this->tmp, $expiresAt ?: time() + 31556952); // 1 year in seconds
             }
 
             return rename($this->tmp, $file);
@@ -143,7 +154,7 @@ trait FilesystemCommonTrait
                     continue;
                 }
 
-                foreach (@scandir($dir, SCANDIR_SORT_NONE) ?: [] as $file) {
+                foreach (@scandir($dir, \SCANDIR_SORT_NONE) ?: [] as $file) {
                     if ('.' !== $file && '..' !== $file) {
                         yield $dir.\DIRECTORY_SEPARATOR.$file;
                     }
@@ -155,7 +166,7 @@ trait FilesystemCommonTrait
     /**
      * @internal
      */
-    public static function throwError($type, $message, $file, $line)
+    public static function throwError(int $type, string $message, string $file, int $line)
     {
         throw new \ErrorException($message, 0, $type, $file, $line);
     }

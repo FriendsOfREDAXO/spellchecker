@@ -32,6 +32,10 @@ class CacheCollectorPass implements CompilerPassInterface
 
     public function __construct(string $dataCollectorCacheId = 'data_collector.cache', string $cachePoolTag = 'cache.pool', string $cachePoolRecorderInnerSuffix = '.recorder_inner')
     {
+        if (0 < \func_num_args()) {
+            trigger_deprecation('symfony/cache', '5.3', 'Configuring "%s" is deprecated.', __CLASS__);
+        }
+
         $this->dataCollectorCacheId = $dataCollectorCacheId;
         $this->cachePoolTag = $cachePoolTag;
         $this->cachePoolRecorderInnerSuffix = $cachePoolRecorderInnerSuffix;
@@ -47,15 +51,13 @@ class CacheCollectorPass implements CompilerPassInterface
         }
 
         foreach ($container->findTaggedServiceIds($this->cachePoolTag) as $id => $attributes) {
-            $this->addToCollector($id, $container);
+            $poolName = $attributes[0]['name'] ?? $id;
 
-            if (($attributes[0]['name'] ?? $id) !== $id) {
-                $this->addToCollector($attributes[0]['name'], $container);
-            }
+            $this->addToCollector($id, $poolName, $container);
         }
     }
 
-    private function addToCollector(string $id, ContainerBuilder $container)
+    private function addToCollector(string $id, string $name, ContainerBuilder $container)
     {
         $definition = $container->getDefinition($id);
         if ($definition->isAbstract()) {
@@ -70,6 +72,15 @@ class CacheCollectorPass implements CompilerPassInterface
         }
         $recorder->setArguments([new Reference($innerId = $id.$this->cachePoolRecorderInnerSuffix)]);
 
+        foreach ($definition->getMethodCalls() as [$method, $args]) {
+            if ('setCallbackWrapper' !== $method || !$args[0] instanceof Definition || !($args[0]->getArguments()[2] ?? null) instanceof Definition) {
+                continue;
+            }
+            if ([new Reference($id), 'setCallbackWrapper'] == $args[0]->getArguments()[2]->getFactory()) {
+                $args[0]->getArguments()[2]->setFactory([new Reference($innerId), 'setCallbackWrapper']);
+            }
+        }
+
         $definition->setTags([]);
         $definition->setPublic(false);
 
@@ -77,7 +88,7 @@ class CacheCollectorPass implements CompilerPassInterface
         $container->setDefinition($id, $recorder);
 
         // Tell the collector to add the new instance
-        $collectorDefinition->addMethodCall('addInstance', [$id, new Reference($id)]);
+        $collectorDefinition->addMethodCall('addInstance', [$name, new Reference($id)]);
         $collectorDefinition->setPublic(false);
     }
 }

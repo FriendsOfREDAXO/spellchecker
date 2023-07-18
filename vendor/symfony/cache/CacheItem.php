@@ -43,6 +43,8 @@ final class CacheItem implements ItemInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return mixed
      */
     public function get()
     {
@@ -119,9 +121,10 @@ final class CacheItem implements ItemInterface
             $tags = [$tags];
         }
         foreach ($tags as $tag) {
-            if (!\is_string($tag)) {
-                throw new InvalidArgumentException(sprintf('Cache tag must be string, "%s" given.', get_debug_type($tag)));
+            if (!\is_string($tag) && !(\is_object($tag) && method_exists($tag, '__toString'))) {
+                throw new InvalidArgumentException(sprintf('Cache tag must be string or object that implements __toString(), "%s" given.', \is_object($tag) ? \get_class($tag) : \gettype($tag)));
             }
+            $tag = (string) $tag;
             if (isset($this->newMetadata[self::METADATA_TAGS][$tag])) {
                 continue;
             }
@@ -148,7 +151,7 @@ final class CacheItem implements ItemInterface
     /**
      * Validates a cache key according to PSR-6.
      *
-     * @param string $key The key to validate
+     * @param mixed $key The key to validate
      *
      * @throws InvalidArgumentException When $key is not valid
      */
@@ -179,11 +182,11 @@ final class CacheItem implements ItemInterface
         } else {
             $replace = [];
             foreach ($context as $k => $v) {
-                if (is_scalar($v)) {
+                if (\is_scalar($v)) {
                     $replace['{'.$k.'}'] = $v;
                 }
             }
-            @trigger_error(strtr($message, $replace), E_USER_WARNING);
+            @trigger_error(strtr($message, $replace), \E_USER_WARNING);
         }
     }
 }

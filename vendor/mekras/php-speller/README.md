@@ -4,8 +4,7 @@ PHP spell check library.
 
 [![Latest Stable Version](https://poser.pugx.org/mekras/php-speller/v/stable.png)](https://packagist.org/packages/mekras/php-speller)
 [![License](https://poser.pugx.org/mekras/php-speller/license.png)](https://packagist.org/packages/mekras/php-speller)
-[![Build Status](https://travis-ci.org/mekras/php-speller.svg?branch=master)](https://travis-ci.org/mekras/php-speller)
-[![Coverage Status](https://coveralls.io/repos/mekras/php-speller/badge.png?branch=master)](https://coveralls.io/r/mekras/php-speller?branch=master)
+[![Build Pipeline](https://github.com/mekras/php-speller/actions/workflows/build.yml/badge.svg)](https://github.com/mekras/php-speller/actions/workflows/build.yml)
 
 Currently supported backends:
 

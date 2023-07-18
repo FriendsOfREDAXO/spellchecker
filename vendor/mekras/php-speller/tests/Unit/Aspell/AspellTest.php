@@ -16,6 +16,7 @@ use Mekras\Speller\Aspell\Aspell;
 use Mekras\Speller\Source\EncodingAwareSource;
 use Mekras\Speller\Source\StringSource;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Process\Process;
 
 /**
@@ -26,6 +27,8 @@ use Symfony\Component\Process\Process;
  */
 class AspellTest extends TestCase
 {
+    use ProphecyTrait;
+
     protected static $input;
     protected static $dicts;
     protected static $check;
@@ -49,7 +52,7 @@ class AspellTest extends TestCase
     {
         $process = $this->prophesize(Process::class);
 
-        $process->setTimeout(600)->shouldBeCalled();
+        $process->setTimeout(600)->shouldBeCalled()->willReturn($process);
         $process->run()->shouldBeCalled();
         $process->isSuccessful()->shouldBeCalled()->willReturn(true);
         $process->getOutput()->shouldBeCalled()->willReturn(self::$dicts);
@@ -85,9 +88,9 @@ class AspellTest extends TestCase
     {
         $process = $this->prophesize(Process::class);
 
-        $process->setTimeout(600)->shouldBeCalled();
-        $process->setEnv([])->shouldBeCalled();
-        $process->setInput(self::$input)->shouldBeCalled();
+        $process->setTimeout(600)->shouldBeCalled()->willReturn($process);
+        $process->setEnv([])->shouldBeCalled()->willReturn($process);
+        $process->setInput(self::$input)->shouldBeCalled()->willReturn($process);
         $process->run()->shouldBeCalled();
         $process->getExitCode()->shouldBeCalled()->willReturn(0);
         $process->getOutput()->shouldBeCalled()->willReturn(self::$check);
@@ -127,9 +130,9 @@ class AspellTest extends TestCase
         $source = new StringSource('S:t Petersburg är i Ryssland', 'UTF-8');
 
         $process = $this->prophesize(Process::class);
-        $process->setTimeout(600)->shouldBeCalled();
-        $process->setEnv([])->shouldBeCalled();
-        $process->setInput('S:t Petersburg är i Ryssland')->shouldBeCalled();
+        $process->setTimeout(600)->shouldBeCalled()->willReturn($process);
+        $process->setEnv([])->shouldBeCalled()->willReturn($process);
+        $process->setInput('S:t Petersburg är i Ryssland')->shouldBeCalled()->willReturn($process);
         $process->run()->shouldBeCalled();
         $process->getExitCode()->shouldBeCalled()->willReturn(0);
         $process->getOutput()->shouldBeCalled()->willReturn(file_get_contents(__DIR__ . '/fixtures/check_sv.txt'));
@@ -153,9 +156,9 @@ class AspellTest extends TestCase
         $source = new StringSource('The quick brown fox jumps over the lazy dog', 'UTF-8');
 
         $process = $this->prophesize(Process::class);
-        $process->setTimeout(600)->shouldBeCalled();
-        $process->setEnv([])->shouldBeCalled();
-        $process->setInput('The quick brown fox jumps over the lazy dog')->shouldBeCalled();
+        $process->setTimeout(600)->shouldBeCalled()->willReturn($process);
+        $process->setEnv([])->shouldBeCalled()->willReturn($process);
+        $process->setInput('The quick brown fox jumps over the lazy dog')->shouldBeCalled()->willReturn($process);
         $process->run()->shouldBeCalled();
         $process->getExitCode()->shouldBeCalled()->willReturn(0);
         $process->getOutput()->shouldBeCalled()->willReturn('& unexpected output: foo, bar, baz');

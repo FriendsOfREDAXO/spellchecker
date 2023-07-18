@@ -17,6 +17,7 @@ use Mekras\Speller\Exception\ExternalProgramFailedException;
 use Mekras\Speller\ExternalSpeller;
 use Mekras\Speller\Source\EncodingAwareSource;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
 
@@ -27,6 +28,8 @@ use Symfony\Component\Process\Process;
  */
 class ExternalSpellerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * Should raise an ExternalProgramFailedException
      */
@@ -35,9 +38,9 @@ class ExternalSpellerTest extends TestCase
         $commandLine = 'aspell';
         $process = $this->prophesize(Process::class);
 
-        $process->setTimeout(600)->shouldBeCalled();
-        $process->setEnv([])->shouldBeCalled();
-        $process->setInput('')->shouldBeCalled();
+        $process->setTimeout(600)->shouldBeCalled()->willReturn($process);
+        $process->setEnv([])->shouldBeCalled()->willReturn($process);
+        $process->setInput('')->shouldBeCalled()->willReturn($process);
         $process->getCommandLine()->shouldBeCalled()->willReturn($commandLine);
 
         $process->run()->willThrow(RuntimeException::class);
@@ -62,9 +65,9 @@ class ExternalSpellerTest extends TestCase
     {
         $process = $this->prophesize(Process::class);
 
-        $process->setTimeout(600)->shouldBeCalled();
-        $process->setEnv([])->shouldBeCalled();
-        $process->setInput('')->shouldBeCalled();
+        $process->setTimeout(600)->shouldBeCalled()->willReturn($process);
+        $process->setEnv([])->shouldBeCalled()->willReturn($process);
+        $process->setInput('')->shouldBeCalled()->willReturn($process);
         $process->run()->shouldBeCalled();
 
         $exception = new EnvironmentException('Test exception', 111);
@@ -91,9 +94,9 @@ class ExternalSpellerTest extends TestCase
         $commandLine = 'aspell';
         $process = $this->prophesize(Process::class);
 
-        $process->setTimeout(600)->shouldBeCalled();
-        $process->setEnv([])->shouldBeCalled();
-        $process->setInput('')->shouldBeCalled();
+        $process->setTimeout(600)->shouldBeCalled()->willReturn($process);
+        $process->setEnv([])->shouldBeCalled()->willReturn($process);
+        $process->setInput('')->shouldBeCalled()->willReturn($process);
         $process->run()->shouldBeCalled();
         $process->getCommandLine()->shouldBeCalled()->willReturn($commandLine);
         $process->getErrorOutput()->shouldBeCalled()->willReturn('Error');

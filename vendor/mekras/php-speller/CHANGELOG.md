@@ -1,5 +1,32 @@
 # Changelog
 
+## Unreleased
+
+
+## 2.3.0 - 2023-04-14
+### Added
+- Added build updates for php 8.2
+### Removed
+- Dropped support for php 7.3
+- Dropped support for symfony < 5.4
+### Fixed
+- Added `resetProcess` to `Aspell::getSupportedLanguages` to avoid cached process
+- Added `resetProcess` to `ExternalSpeller::checkText` to avoid cached process
+
+## 2.2.0 - 2022-03-31
+### Removed
+- Dropped support for php 7.1 and 7.2
+
+## 2.1.4 - 2021-03-15
+### Changed
+- Add support for PHP 8
+### Removed
+- Removed `getMessage` from `PhpSpellerException` as it already declared from `Throwable`
+
+## 2.1.3 - 2020-09-23
+### Fixed
+- Fix incorrect escaping of hunspell command (#29)
+
 ## 2.1.2 - 2020-08-20
 ### Fixed
 - HtmlFilter raises Error with malformed HTML tags (#27)

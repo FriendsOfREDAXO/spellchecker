@@ -42,7 +42,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
     public function __construct(\CouchbaseBucket $bucket, string $namespace = '', int $defaultLifetime = 0, MarshallerInterface $marshaller = null)
     {
         if (!static::isSupported()) {
-            throw new CacheException('Couchbase >= 2.6.0 is required.');
+            throw new CacheException('Couchbase >= 2.6.0 < 3.0.0 is required.');
         }
 
         $this->maxIdLength = static::MAX_KEY_LENGTH;
@@ -66,7 +66,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
         }
 
         if (!static::isSupported()) {
-            throw new CacheException('Couchbase >= 2.6.0 is required.');
+            throw new CacheException('Couchbase >= 2.6.0 < 3.0.0 is required.');
         }
 
         set_error_handler(function ($type, $msg, $file, $line) { throw new \ErrorException($msg, 0, $type, $file, $line); });
@@ -125,7 +125,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
 
     public static function isSupported(): bool
     {
-        return \extension_loaded('couchbase') && version_compare(phpversion('couchbase'), '2.6.0', '>=');
+        return \extension_loaded('couchbase') && version_compare(phpversion('couchbase'), '2.6.0', '>=') && version_compare(phpversion('couchbase'), '3.0', '<');
     }
 
     private static function getOptions(string $options): array
@@ -134,7 +134,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
         $optionsInArray = explode('&', $options);
 
         foreach ($optionsInArray as $option) {
-            list($key, $value) = explode('=', $option);
+            [$key, $value] = explode('=', $option);
 
             if (\in_array($key, static::VALID_DSN_OPTIONS, true)) {
                 $results[$key] = $value;
@@ -182,7 +182,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      */
-    protected function doHave($id): bool
+    protected function doHave(string $id): bool
     {
         return false !== $this->bucket->get($id);
     }
@@ -190,7 +190,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      */
-    protected function doClear($namespace): bool
+    protected function doClear(string $namespace): bool
     {
         if ('' === $namespace) {
             $this->bucket->manager()->flush();
@@ -221,7 +221,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      */
-    protected function doSave(array $values, $lifetime)
+    protected function doSave(array $values, int $lifetime)
     {
         if (!$values = $this->marshaller->marshall($values, $failed)) {
             return $failed;

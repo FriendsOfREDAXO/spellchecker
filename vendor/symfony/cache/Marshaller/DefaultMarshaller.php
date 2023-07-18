@@ -21,15 +21,17 @@ use Symfony\Component\Cache\Exception\CacheException;
 class DefaultMarshaller implements MarshallerInterface
 {
     private $useIgbinarySerialize = true;
+    private $throwOnSerializationFailure;
 
-    public function __construct(bool $useIgbinarySerialize = null)
+    public function __construct(bool $useIgbinarySerialize = null, bool $throwOnSerializationFailure = false)
     {
         if (null === $useIgbinarySerialize) {
-            $useIgbinarySerialize = \extension_loaded('igbinary') && (\PHP_VERSION_ID < 70400 || version_compare('3.1.0', phpversion('igbinary'), '<='));
-        } elseif ($useIgbinarySerialize && (!\extension_loaded('igbinary') || (\PHP_VERSION_ID >= 70400 && version_compare('3.1.0', phpversion('igbinary'), '>')))) {
-            throw new CacheException(\extension_loaded('igbinary') && \PHP_VERSION_ID >= 70400 ? 'Please upgrade the "igbinary" PHP extension to v3.1 or higher.' : 'The "igbinary" PHP extension is not loaded.');
+            $useIgbinarySerialize = \extension_loaded('igbinary') && (\PHP_VERSION_ID < 70400 || version_compare('3.1.6', phpversion('igbinary'), '<='));
+        } elseif ($useIgbinarySerialize && (!\extension_loaded('igbinary') || (\PHP_VERSION_ID >= 70400 && version_compare('3.1.6', phpversion('igbinary'), '>')))) {
+            throw new CacheException(\extension_loaded('igbinary') && \PHP_VERSION_ID >= 70400 ? 'Please upgrade the "igbinary" PHP extension to v3.1.6 or higher.' : 'The "igbinary" PHP extension is not loaded.');
         }
         $this->useIgbinarySerialize = $useIgbinarySerialize;
+        $this->throwOnSerializationFailure = $throwOnSerializationFailure;
     }
 
     /**
@@ -47,6 +49,9 @@ class DefaultMarshaller implements MarshallerInterface
                     $serialized[$id] = serialize($value);
                 }
             } catch (\Exception $e) {
+                if ($this->throwOnSerializationFailure) {
+                    throw new \ValueError($e->getMessage(), 0, $e);
+                }
                 $failed[] = $id;
             }
         }
@@ -66,7 +71,7 @@ class DefaultMarshaller implements MarshallerInterface
             return null;
         }
         static $igbinaryNull;
-        if ($value === ($igbinaryNull ?? $igbinaryNull = \extension_loaded('igbinary') && (\PHP_VERSION_ID < 70400 || version_compare('3.1.0', phpversion('igbinary'), '<=')) ? igbinary_serialize(null) : false)) {
+        if ($value === ($igbinaryNull ?? $igbinaryNull = \extension_loaded('igbinary') ? igbinary_serialize(null) : false)) {
             return null;
         }
         $unserializeCallbackHandler = ini_set('unserialize_callback_func', __CLASS__.'::handleUnserializeCallback');
@@ -83,7 +88,7 @@ class DefaultMarshaller implements MarshallerInterface
 
             throw new \DomainException(error_get_last() ? error_get_last()['message'] : 'Failed to unserialize values.');
         } catch (\Error $e) {
-            throw new \ErrorException($e->getMessage(), $e->getCode(), E_ERROR, $e->getFile(), $e->getLine());
+            throw new \ErrorException($e->getMessage(), $e->getCode(), \E_ERROR, $e->getFile(), $e->getLine());
         } finally {
             ini_set('unserialize_callback_func', $unserializeCallbackHandler);
         }
