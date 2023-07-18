@@ -13,7 +13,6 @@ rex_extension::register(
         if ('rex_spellchecker_dictionary' == $table->getTableName()) {
             $data = $params['data']->getData();
             if (1 == $data['dic']) {
-                dump($data);
                 rex_spellchecker_issue::deleteIssuesByWordId($data['id']);
             }
             rex_spellchecker::compileDictionaries();
