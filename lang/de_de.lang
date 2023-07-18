@@ -56,3 +56,5 @@ spellchecker_ignore = ignorieren
 or = oder
 spellchecker_issue_ignored = Issue wird nun ignoriert
 spellchecker_issue_not_found = Issue wurde nicht gefunden
+
+spellchecker_word_added = Wort `{0}` wurde hinzugefügt
