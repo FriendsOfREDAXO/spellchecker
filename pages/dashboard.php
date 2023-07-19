@@ -5,11 +5,12 @@
 $func = rex_request('func', 'string', '');
 $word_id = rex_request('word_id', 'int', 0);
 $issue_id = rex_request('issue_id', 'int', 0);
+$mainContent = [];
 
 switch ($func) {
     case 'ignore':
         $issue = rex_spellchecker_issue::get($issue_id);
-        if ($issue) {
+        if (null !== $issue) {
             $issue->setValue('ignore', 1)->save();
             $func = 'open';
             $word_id = (int) $issue->getValue('word_id');
@@ -51,8 +52,8 @@ $content .= '<thead>
 $content .= '<tbody>';
 foreach ($words as $word) {
     try {
-        $wordObject = rex_spellchecker_dictionary::get((int) $word['word_id']);
-        if ($word['word_id'] == $word_id) {
+        $wordObject = rex_spellchecker_dictionary::get($word['word_id']);
+        if ((int) $word['word_id'] === $word_id) {
             $content .= '<tr class="rex">';
         } else {
             $content .= '<tr>';
@@ -78,7 +79,7 @@ $sideContent = [];
 
 $fragment_title = '...';
 $content = '';
-if ('open' == $func) {
+if ('open' === $func) {
     $content = '<table class="table table-hover">';
     $content .= '<thead>
             <th>'.rex_i18n::msg('spellchecker_field_title').'</th>
@@ -97,7 +98,13 @@ if ('open' == $func) {
         if (isset($scans[$item['scankey']])) {
             /** @var rex_spellchecker_scan $scan */
             $scan = $scans[$item['scankey']];
-            $title = rex_sql::factory()->getArray('select '.$scan->getTitleField().' from '.$scan->getTableName().' where '.$scan->getIdField().' = ?', [$item['item_id']]);
+            /** @phpstan-ignore-next-line */
+            $title = rex_sql::factory()->getArray(
+                    'select ' . rex_sql::factory()->escapeIdentifier($scan->getTitleField()) . ' from ' . rex_sql::factory()->escapeIdentifier($scan->getTableName()) . ' where ' . rex_sql::factory()->escapeIdentifier($scan->getIdField()) . ' = :item_id',
+                    [
+                        'item_id' => $item['item_id']
+                    ]
+            );
             if (count($title) > 0) {
                 $link_edit = $scan->getLink();
                 $link_edit = str_replace('{id}', $item['item_id'], $link_edit);

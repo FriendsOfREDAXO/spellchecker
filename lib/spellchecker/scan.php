@@ -9,18 +9,18 @@ use Mekras\Speller\Source\StringSource;
 
 class rex_spellchecker_scan
 {
-    public static $scans = [];
-    public $scanKey;
-    public $idField;
-    public $titleField;
-    public $table;
-    public $scanFields;
-    public $query;
-    public $query_count;
-    public $link;
-    public $language;
-    public $scan_interval;
-    public $scan_duration;
+    private static $scans = [];
+    private $scanKey;
+    private $idField;
+    private $titleField;
+    private $table;
+    private $scanFields;
+    private $query;
+    private $query_count;
+    private $link;
+    private $language;
+    private $scan_interval;
+    private $scan_duration;
 
     public function __construct(string $scanKey, string $idField, string $titleField, string $table, array $scanFields, string $query, string $query_count, string $link, string $language, int $interval = 100, int $duration = 86400)
     {
@@ -37,11 +37,15 @@ class rex_spellchecker_scan
         $this->scan_duration = $duration; // Sekunden, danach startet der Scan wieder bei 0
     }
 
+    /** @api */
     public static function addScan(self $scan): void
     {
         self::$scans[$scan->getKey()] = $scan;
     }
 
+    /**
+     * @return rex_spellchecker_scan[]
+     */
     public static function getScans(): array
     {
         return self::$scans;
@@ -51,7 +55,7 @@ class rex_spellchecker_scan
     {
         foreach (self::getScans() as $scan) {
             /** @var rex_spellchecker_scan $scan */
-//             $scan->resetConfig();
+            //             $scan->resetConfig();
             if (!$scan->scanDone()) {
                 foreach ($scan->getLimitedItemsAsArray() as $item) {
                     // Spellchecker filter drüberlaufen lassen
@@ -84,9 +88,9 @@ class rex_spellchecker_scan
                     rex_spellchecker_issue::deleteItemIssues($scan, $item);
                     $issueWords = [];
                     foreach ($issues as $issue) {
-                        if ('Unknown word' == $issue->code && !in_array($issue->word, $issueWords, true)) {
+                        if ('Unknown word' === $issue->code && !in_array($issue->word, $issueWords, true)) {
                             $wordObject = rex_spellchecker_dictionary::getByWordLanguage($issue->word, $scan->language);
-                            if (0 == $wordObject->getValue('dic')) {
+                            if (0 === (int) $wordObject->getValue('dic')) {
                                 rex_spellchecker_issue::addIssue($wordObject, $scan, $item, $issue);
                             }
                             // extra - so dass nur einmal eine Wortfindung pro Item gespeichert wird.
@@ -137,11 +141,13 @@ class rex_spellchecker_scan
         return $this->table;
     }
 
+    /** @phpstan-ignore-next-line */
     public function getQuery()
     {
         return $this->query;
     }
 
+    /** @phpstan-ignore-next-line */
     public function getQueryCount()
     {
         return $this->query_count;
@@ -178,8 +184,8 @@ class rex_spellchecker_scan
     private function getLimitedItemsAsArray()
     {
         $CurrentScanPosition = $this->getCurrentScanPosition();
-
-        return rex_sql::factory()->getArray($this->query.' LIMIT '.$CurrentScanPosition.','.$this->scan_interval);
+        /** @phpstan-ignore-next-line */
+        return rex_sql::factory()->getArray($this->query . ' LIMIT ' . (int) $CurrentScanPosition . ',' . $this->scan_interval);
     }
 
     private function initScan(): void

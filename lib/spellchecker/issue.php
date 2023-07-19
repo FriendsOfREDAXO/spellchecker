@@ -26,8 +26,7 @@ class rex_spellchecker_issue extends \rex_yform_manager_dataset
                     ->where('scankey', $scan->getKey())
                     ->where('ignore', 0)
                     ->where('item_id', $item[$scan->getIdField()])
-                    ->find()
-                as $issue) {
+                    ->find() as $issue) {
             $issue->delete();
         }
     }
@@ -37,8 +36,7 @@ class rex_spellchecker_issue extends \rex_yform_manager_dataset
         foreach (self::query()
                      ->where('word_id', $word_id)
                      ->where('ignore', 0)
-                     ->find()
-                 as $issue) {
+                     ->find() as $issue) {
             $issue->delete();
         }
         $cache = new FilesystemAdapter();
@@ -50,15 +48,26 @@ class rex_spellchecker_issue extends \rex_yform_manager_dataset
         $cache = new FilesystemAdapter();
         $cache->delete('spellchecker_getWordsCount');
 
-        return $cache->get('spellchecker_getWordsCount', function (ItemInterface $item) use ($limit) {
+        return $cache->get('spellchecker_getWordsCount', static function (ItemInterface $item) use ($limit) {
             $item->expiresAfter(3600);
 
-            return rex_sql::factory()->getArray('select count(id) as counts, word_id from '.self::table().' where `ignore`=0 group by word_id order by counts desc LIMIT '.$limit);
+            return rex_sql::factory()->getArray(
+                'select count(id) as counts, word_id from ' . self::table() . ' where `ignore`= 0 group by word_id order by counts desc LIMIT :limit',
+                [
+                    'limit' => $limit,
+                ]
+            );
         });
     }
 
     public static function getItemsByWordId(int $word_id, $limit = 20)
     {
-        return rex_sql::factory()->getArray('select * from '.self::table().' where `ignore`=0 and word_id = ? LIMIT '.$limit, [$word_id]);
+        return rex_sql::factory()->getArray(
+            'select * from ' . self::table() . ' where `ignore`=0 and word_id = :word_id LIMIT :limit',
+            [
+                'word_id' => $word_id,
+                'limit' => $limit,
+            ]
+        );
     }
 }

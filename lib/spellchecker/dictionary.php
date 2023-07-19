@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 class rex_spellchecker_dictionary extends \rex_yform_manager_dataset
 {
-    public static $cacheWords = [];
+    private static $cacheWords = [];
 
     public static function getByWordLanguage($word, $language)
     {
@@ -13,7 +13,7 @@ class rex_spellchecker_dictionary extends \rex_yform_manager_dataset
         }
 
         $wordObject = self::query()->where('word', $word)->findOne();
-        if (!$wordObject) {
+        if (null === $wordObject) {
             $wordObject = self::create()
                 ->setValue('word', $word)
                 ->setValue('dic', 0)

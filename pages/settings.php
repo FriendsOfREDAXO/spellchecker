@@ -4,7 +4,7 @@
 
 $func = rex_request('func', 'string');
 
-if ('update' == $func) {
+if ('update' === $func) {
     $this->setConfig(
         rex_post(
             'spellchecker',

@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 $content = '';
 $scans = rex_spellchecker_scan::getScans();
 
-if (0 == count($scans)) {
+if (0 === count($scans)) {
     echo rex_view::info(rex_i18n::msg('spellchecker_noscansfound'));
 } else {
     $content = '<table class="table table-hover">';
@@ -23,9 +21,8 @@ if (0 == count($scans)) {
             <th>'.rex_i18n::msg('spellchecker_scanDone').'</th>
             </thead>';
     $content .= '<tbody>';
-    foreach ($scans as $scan) {
-        /* @var rex_spellchecker_scan $scan */
 
+    foreach ($scans as $scan) {
         $content .= '<tr class="rex">';
         $content .= '<td><b>'.rex_escape($scan->getKey()).'</b></td>'; // <br /><a href="'.rex_url::currentBackendPage(['func' => 'add_word', 'word_id' => 1]).'">' . rex_i18n::msg('spellchecker_add_word'). '</a>
         $content .= '<td>'.rex_escape($scan->getLanguage()).'</td>';
