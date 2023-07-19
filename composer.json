@@ -1,11 +1,19 @@
 {
     "require": {
-        "mekras/php-speller": "^2.1",
-        "symfony/cache": "^5.1"
+        "mekras/php-speller": "^2.1"
     },
     "replace": {
         "psr/container": "*",
         "psr/http-message": "*",
-        "psr/log": "*"
+        "psr/log": "*",
+        "phpspec/prophecy-phpunit": "*"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "rm -rf vendor/composer && rm -f vendor/autoload.php"
+        ],
+        "post-update-cmd": [
+            "rm -rf vendor/composer && rm -f vendor/autoload.php"
+        ]
     }
 }

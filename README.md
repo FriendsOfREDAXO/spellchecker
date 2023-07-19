@@ -1,4 +1,4 @@
-Spellchecker für REDAXO 5.11+ und YForm 3+
+Spellchecker für REDAXO 5.11+ und YForm 4+
 =============
 
 Features

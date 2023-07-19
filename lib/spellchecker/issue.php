@@ -1,10 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Contracts\Cache\ItemInterface;
-
 class rex_spellchecker_issue extends \rex_yform_manager_dataset
 {
     public static function addIssue($wordObject, rex_spellchecker_scan $scan, $item, $issue): void
@@ -39,25 +34,16 @@ class rex_spellchecker_issue extends \rex_yform_manager_dataset
                      ->find() as $issue) {
             $issue->delete();
         }
-        $cache = new FilesystemAdapter();
-        $cache->delete('spellchecker_getWordsCount');
     }
 
     public static function getWordsCount(int $limit = 20)
     {
-        $cache = new FilesystemAdapter();
-        $cache->delete('spellchecker_getWordsCount');
-
-        return $cache->get('spellchecker_getWordsCount', static function (ItemInterface $item) use ($limit) {
-            $item->expiresAfter(3600);
-
-            return rex_sql::factory()->getArray(
-                'select count(id) as counts, word_id from ' . self::table() . ' where `ignore`= 0 group by word_id order by counts desc LIMIT :limit',
-                [
-                    'limit' => $limit,
-                ]
-            );
-        });
+        return rex_sql::factory()->getArray(
+            'select count(id) as counts, word_id from ' . self::table() . ' where `ignore`= 0 group by word_id order by counts desc LIMIT :limit',
+            [
+                'limit' => $limit,
+            ]
+        );
     }
 
     public static function getItemsByWordId(int $word_id, $limit = 20)
