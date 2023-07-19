@@ -10,6 +10,17 @@ use Mekras\Speller\Source\StringSource;
 class rex_spellchecker_scan
 {
     public static $scans = [];
+    public $scanKey;
+    public $idField;
+    public $titleField;
+    public $table;
+    public $scanFields;
+    public $query;
+    public $query_count;
+    public $link;
+    public $language;
+    public $scan_interval;
+    public $scan_duration;
 
     public function __construct(string $scanKey, string $idField, string $titleField, string $table, array $scanFields, string $query, string $query_count, string $link, string $language, int $interval = 100, int $duration = 86400)
     {
@@ -174,7 +185,7 @@ class rex_spellchecker_scan
     private function initScan(): void
     {
         $scanStart = rex_config::get('spellchecker', 'start_'.md5($this->getKey()).'', date('U'));
-        if (($scanStart + $this->scan_duration) < date('U')) {
+        if ((int) ($scanStart + $this->scan_duration) < (int) date('U')) {
             // abgelaufen = time setzen auf aktuell und currentPos auf 0
             $this->resetConfig();
         }

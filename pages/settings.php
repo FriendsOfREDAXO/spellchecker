@@ -1,6 +1,6 @@
 <?php
 
-$addon = rex_addon::get('spellchecker');
+/** @var rex_addon $this */
 
 $func = rex_request('func', 'string');
 
@@ -25,7 +25,7 @@ $formElements = [];
 
 $n = [];
 $n['label'] = '<label for="rex-id-lang">' . rex_i18n::msg('spellchecker_bin_path') . '</label>';
-$n['field'] = '<input class="form-control" id="spellchecker-bin" type="text" name="spellchecker[binaryPath]" value="' . rex_escape($addon->getConfig('binaryPath')) . '" />';
+$n['field'] = '<input class="form-control" id="spellchecker-bin" type="text" name="spellchecker[binaryPath]" value="' . rex_escape($this->getConfig('binaryPath')) . '" />';
 $n['note'] = '/usr/bin/aspell';
 $formElements[] = $n;
 
@@ -36,16 +36,14 @@ $content .= $fragment->parse('core/form/form.php');
 $formElements = [];
 $n = [];
 $n['field'] = '<button class="btn btn-apply rex-form-aligned" type="submit" name="send" value="1"'.\rex::getAccesskey(
-        \rex_i18n::msg('update'),
-        'apply'
-    ).'>'.\rex_i18n::msg('update').'</button>';
+    \rex_i18n::msg('update'),
+    'apply'
+).'>'.\rex_i18n::msg('update').'</button>';
 $formElements[] = $n;
 
 $fragment = new \rex_fragment();
 $fragment->setVar('elements', $formElements, false);
 $buttons = $fragment->parse('core/form/submit.php');
-
-
 
 $fragment = new \rex_fragment();
 $fragment->setVar('class', 'edit', false);

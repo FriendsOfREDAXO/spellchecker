@@ -1,11 +1,13 @@
 <?php
 
-declare(strict_types=1);
+/** @var rex_addon $this */
+
 $target_page = rex_request('page', 'string');
+$wrapper = '';
+$show_title = false;
 
 if ('yform/manager/data_edit' == $target_page) {
     $table_name = rex_request('table_name', 'string');
-    $wrapper = '';
     $show_title = true;
 } elseif (isset($this->getProperty('page')['subpages'][rex_be_controller::getCurrentPagePart(2)])) {
     // page-Properties allgemein abrufen
@@ -23,7 +25,10 @@ if ('yform/manager/data_edit' == $target_page) {
 
 $table = rex_yform_manager_table::get($table_name);
 
-if ($table && rex::getUser() && (rex::getUser()->isAdmin() || rex::getUser()->getComplexPerm('yform_manager_table')->hasPerm($table->getTableName()))) {
+/** @var rex_yform_manager_table_perm_edit $complex_perm */
+$complex_perm = rex::getUser()->getComplexPerm('yform_manager_table_perm_edit');
+
+if ($table && rex::getUser() && (rex::getUser()->isAdmin() || $complex_perm->hasPerm($table->getTableName()))) {
     try {
         $page = new rex_yform_manager();
         $page->setTable($table);

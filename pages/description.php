@@ -1,5 +1,7 @@
 <?php
 
+/** @var rex_addon $this */
+
 $content = '
 
 <h3>Was macht der Spellchecker</h3>

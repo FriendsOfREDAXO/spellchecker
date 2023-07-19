@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/** @var rex_addon $this */
 
 $func = rex_request('func', 'string', '');
 $word_id = rex_request('word_id', 'int', 0);
@@ -8,7 +8,6 @@ $issue_id = rex_request('issue_id', 'int', 0);
 
 switch ($func) {
     case 'ignore':
-
         $issue = rex_spellchecker_issue::get($issue_id);
         if ($issue) {
             $issue->setValue('ignore', 1)->save();
