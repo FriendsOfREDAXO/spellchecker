@@ -33,4 +33,4 @@ page:
 requires:
     redaxo: '>=5.11'
     packages:
-        yform: '^3'
+        yform: '^4'
