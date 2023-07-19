@@ -15,4 +15,5 @@ rex_extension::register(
             }
             rex_spellchecker::compileDictionaries();
         }
-    });
+    }
+);

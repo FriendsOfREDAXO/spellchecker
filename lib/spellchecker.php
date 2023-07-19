@@ -13,7 +13,7 @@ class rex_spellchecker
     {
         foreach (['de', 'en'] as $language) {
             $content = 'personal_ws-1.1 '.$language.' 0 utf-8';
-            foreach (rex_spellchecker_dictionary::query()->where('language', $language)->where('dic','1')->find() as $word) {
+            foreach (rex_spellchecker_dictionary::query()->where('language', $language)->where('dic', '1')->find() as $word) {
                 $content .= "\n".$word->getValue('word');
             }
             rex_file::put(self::getDictionaryPath($language), $content);
@@ -31,5 +31,4 @@ class rex_spellchecker
         rex_file::put(rex_addon::get('spellchecker')->getDataPath('dictionaries/variants_utf8.dic'), $dic);
     }
     */
-
 }

@@ -100,10 +100,10 @@ if ('open' === $func) {
             $scan = $scans[$item['scankey']];
             /** @phpstan-ignore-next-line */
             $title = rex_sql::factory()->getArray(
-                    'select ' . rex_sql::factory()->escapeIdentifier($scan->getTitleField()) . ' from ' . rex_sql::factory()->escapeIdentifier($scan->getTableName()) . ' where ' . rex_sql::factory()->escapeIdentifier($scan->getIdField()) . ' = :item_id',
-                    [
-                        'item_id' => $item['item_id']
-                    ]
+                'select ' . rex_sql::factory()->escapeIdentifier($scan->getTitleField()) . ' from ' . rex_sql::factory()->escapeIdentifier($scan->getTableName()) . ' where ' . rex_sql::factory()->escapeIdentifier($scan->getIdField()) . ' = :item_id',
+                [
+                    'item_id' => $item['item_id']
+                ]
             );
             if (count($title) > 0) {
                 $link_edit = $scan->getLink();

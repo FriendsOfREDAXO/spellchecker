@@ -50,7 +50,3 @@ $fragment->setVar('class', '');
 $fragment->setVar('title', $this->i18n('spellchecker_description'));
 $fragment->setVar('body', $content, false);
 echo $fragment->parse('core/page/section.php');
-
-
-
-
