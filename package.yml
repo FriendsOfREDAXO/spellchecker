@@ -34,3 +34,4 @@ requires:
     redaxo: '>=5.11'
     packages:
         yform: '^4'
+        cronjob: '^2.10'

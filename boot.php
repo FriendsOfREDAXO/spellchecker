@@ -2,6 +2,7 @@
 
 rex_yform_manager_dataset::setModelClass('rex_spellchecker_dictionary', rex_spellchecker_dictionary::class);
 rex_yform_manager_dataset::setModelClass('rex_spellchecker_issue', rex_spellchecker_issue::class);
+rex_cronjob_manager::registerType(rex_cronjob_spellchecker_scan::class);
 
 rex_extension::register(
     ['YFORM_DATA_UPDATED', 'YFORM_DATA_ADDED'],
